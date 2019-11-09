@@ -8,19 +8,88 @@
 
     <script>
       window.addEventListener("load", ()=>{
+        document.addEventListener('keydown', listenForArrows);
         const navLinkElements = document.querySelectorAll(".sidebar__nav__link")
-        navLinkElements.forEach((link) => link.addEventListener("click", gotoSection))
-
-        gotoSection({
-          target: window.location,
+        navLinkElements.forEach((link) => {
+         link.addEventListener("click", (e) => gotoSection(findSection(e.target.href)))
         })
+        gotoSection(findSection(window.location.href))
+
+        addGestures(document.querySelector(".body"));
+
+
       })
+      function addGestures(body){
+        let touchstartX = 0;
+        let touchstartY = 0;
+        let touchendX = 0;
+        let touchendY = 0;
+
+
+        body.addEventListener('touchstart', function(e) {
+          touchstartX = e.touches[0].clientX;
+          touchstartY = e.touches[0].clientY;
+        }, false);
+
+        body.addEventListener('touchend', function(e) {
+            touchendX = e.changedTouches[0].clientX;
+            touchendY =  e.changedTouches[0].clientY;
+            handleGesture({
+              touchstartX,
+              touchstartY,
+              touchendX,
+              touchendY,
+            });
+        }, false);
+      }
+
+      function handleGesture({ touchstartX, touchstartY, touchendX, touchendY, }){
+        const result = {};
+        result.horizontal =  touchstartX - touchendX;
+        result.vertical =  touchstartY - touchendX;
+        const dominantDirection = Math.abs(result.horizontal) > Math.abs(result.vertical) ? "horizontal" : "vertical" ;
+        if(dominantDirection=="horizontal"){
+          touchstartX > touchendX ? doGo(goForeward(currentIndex())) : doGo(goBack(currentIndex()));
+        }else{
+          touchstartY > touchendY ? doGo(goForeward(currentIndex())) : doGo(goBack(currentIndex()));
+        }
+
+      }
+
+      function listenForArrows(e){
+        let section;
+        switch((window.event||e).key){
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            doGo(goBack(currentIndex()));
+            break;
+          case 'ArrowRight':
+          case 'ArrowDown':
+            doGo(goForeward(currentIndex()));
+            break;
+          default:
+            return
+        }
+      }
+
+      const doGo = (section) => {
+        window.location.hash = section;
+        gotoSection(section);
+      }
+
+      const goBack = (index) => ( sectionOrder[index-1] || sectionOrder[sectionOrder.length - 1] );
+      const goForeward = (index) => ( sectionOrder[index+1] || sectionOrder[0] );
+
+      const sectionOrder = ['event', 'product', 'headshot'];
+
+      const findSection = (loc) => loc.split("#")[1]||sectionOrder[0];
+
+      const currentIndex = () => sectionOrder.indexOf(findSection(window.location.href))
 
       const selectNav = (section) => document.querySelector(`.sidebar__nav a[href='#${section}']`).classList.add("sidebar__nav__link--selected")
 
-      function gotoSection(e){
+      function gotoSection(section){
         document.querySelectorAll(".sidebar__nav a").forEach(link => link.classList.remove("sidebar__nav__link--selected"))
-        const section = e.target.href.split("#")[1] 
         selectNav(section)
         switch ( section ) {
           case "event":
