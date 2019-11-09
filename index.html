@@ -51,10 +51,26 @@
       function listenForArrows(e){
         let section;
         switch((window.event||e).key){
+          case 'k':
+          case 'K':
+          case 'h':
+          case 'H':
+          case 'a':
+          case 'A':
+          case 'w':
+          case 'W':
           case 'ArrowLeft':
           case 'ArrowUp':
             doGo(goBack(currentIndex()));
             break;
+          case 's':
+          case 'S':
+          case 'd':
+          case 'D':
+          case 'j':
+          case 'J':
+          case 'l':
+          case 'L':
           case 'ArrowRight':
           case 'ArrowDown':
             doGo(goForeward(currentIndex()));
