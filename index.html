@@ -233,7 +233,6 @@
       .sidebar__nav {
         display: flex;
         flex-direction: column;
-        font-size: 2em;
         font-weight: bold;
         line-height: 1em;
         margin-left: 0.5em;
@@ -246,6 +245,47 @@
         color: gray;
         margin-top: .5em;
         padding: .5em;
+        padding-right: 1em;
+      }
+
+
+      a.sidebar__nav__link {
+        font-size: 2em;
+        line-height: 1em;
+      }
+
+      .link-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-bottom: 0.5em;
+      }
+      .link-item__anchor {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 0.8em
+      }
+
+      .link-item__sub-list {
+        background-color: darkgrey;
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
+        padding-right: 0.4em;
+        visibility: hidden;
+      }
+
+      a.link-item__sub-item {
+        padding: 0.7em;
+      }
+
+      a.link-item__sub-item--selected {
+        background-color: black;
+        color: white;
+        padding-top:0.2em;
+        padding-bottom:0.1em;
+      }
+      a.sidebar__nav__link--selected+.link-item__sub-list {
+        visibility: visible;
       }
 
       .sidebar__nav a.sidebar__nav__link--selected {
@@ -347,10 +387,33 @@
             -->
           </div>
           <nav class="sidebar__nav">
-            <a href="#event"    class="sidebar__nav__link">Event</a>
-            <a href="#product"  class="sidebar__nav__link">Product</a>
+            <div    class="sidebar__nav__link link-item">
+              <a class="link-item__anchor" href="#event">Event</a>
+              <div class="link-item__sub-list">
+                <a href="#" class="link-item__sub-item link-item__sub-item--selected">1</a>
+                <a href="#" class="link-item__sub-item">2</a>
+                <a href="#" class="link-item__sub-item">3</a>
+                <a href="#" class="link-item__sub-item">3</a>
+                <a href="#" class="link-item__sub-item">3</a>
+              </div>
+            </div>
+            <div    class="sidebar__nav__link link-item">
+              <a class="link-item__anchor" href="#product" >Product</a>
+              <div class="link-item__sub-list">
+                <a href="#" class="link-item__sub-item">1</a>
+                <a href="#" class="link-item__sub-item">2</a>
+                <a href="#" class="link-item__sub-item">3</a>
+              </div>
+            </div>
             <!--<a href="#portrait" class="sidebar__nav__link">Portrait</a>-->
-            <a href="#headshot" class="sidebar__nav__link">Headshot</a>
+            <div    class="sidebar__nav__link link-item">
+              <a class="link-item__anchor" href="#headshot">Headshot</a>
+              <div class="link-item__sub-list">
+                <a href="#" class="link-item__sub-item">1</a>
+                <a href="#" class="link-item__sub-item">2</a>
+                <a href="#" class="link-item__sub-item">3</a>
+              </div>
+            </div>
           </nav>
         </div>
         <footer class="sidebar__footer desktop-only">
