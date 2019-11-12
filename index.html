@@ -13,17 +13,21 @@
 
     <meta name="google" content="notranslate" />
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <title>E Short Photography</title>
+    <title>EAShort Photography</title>
     <link rel="stylesheet" type="text/css" href="assets/fonts.css" />
 
     <script>
       window.addEventListener("load", ()=>{
         document.addEventListener('keydown', listenForArrows);
-        const navLinkElements = document.querySelectorAll(".sidebar__nav__link")
+        const navLinkElements = document.querySelectorAll(".sidebar__nav__link a")
         navLinkElements.forEach((link) => {
-         link.addEventListener("click", (e) => gotoSection(findSection(e.target.href)))
+          link.addEventListener("click", (e) => {
+            const section = findSection(e.target.hash)
+            gotoSection({section: findSection(e.target.hash), subsection: findSubsection(section, e.target.hash)})
+          })
         })
-        gotoSection(findSection(window.location.href))
+        const section = findSection(window.location.hash);
+        gotoSection({section, subsection: findSubsection(section, window.location.hash)})
         addGestures(document.querySelector(".body"));
       })
 
@@ -90,35 +94,61 @@
         }
       }
 
-      const doGo = (section) => {
-        window.location.hash = section;
-        gotoSection(section);
+      const doGo = (section, subsection=1) => {
+        gotoSection({section, subsection});
       }
 
-      const goBack = (index) =>  sectionOrder[index-1] || sectionOrder[sectionOrder.length - 1] ;
-      const goForeward = (index) => sectionOrder[index+1] || sectionOrder[0] ;
+      const goBack = (loc) =>  sectionOrder[loc.section-1] || sectionOrder[sectionOrder.length - 1] ;
+      const goForeward = (loc) => sectionOrder[loc.section+1] || sectionOrder[0] ;
 
-      const sectionOrder = ['event', 'product', 'headshot'];
+      const sectionOrder = [
+        {name: "headshot",
+         images: [
+          "portfolio-images/IMG_9144-Edit.jpg",
+          "portfolio-images/IMG_9446-Edit.jpg",
+         ],
+        },
+        {name: "product",
+         images: [
+          "portfolio-images/IMG_9654-Edit.jpg",
+          "portfolio-images/IMG_9782-Edit.jpg",
+         ],
+        },
+        {name: "event",
+         images: [
+          "portfolio-images/IMG_20191027_021157.jpg"
+         ],
+        },
+      ];
 
-      const findSection = (loc) => loc.split("#")[1]||sectionOrder[0];
+      const findSection = (loc) => sectionOrder.find(s => s.name === loc.replace("#", '').split("/")[0])||sectionOrder[0];
+      const findSubsection = (section, loc) =>{
+        const splitLoc = loc.split('/');
+        const number = parseInt(splitLoc[splitLoc.length - 1]);
+        console.log (section.images.length <= number && number || 1)
+        return (section.images.length <= number && number || 1)
+      }
 
-      const currentIndex = () => sectionOrder.indexOf(findSection(window.location.href))
-
-      const selectNav = (section) => document.querySelector(`.sidebar__nav a[href='#${section||'event'}']`).classList.add("sidebar__nav__link--selected")
-
-      function gotoSection(section){
-        document.querySelectorAll(".sidebar__nav a").forEach(link => link.classList.remove("sidebar__nav__link--selected"))
-        selectNav(section)
-        switch ( section ) {
-          case "event":
-            return updateImage("portfolio-images/IMG_20191027_021157.jpg")
-          case "headshot":
-            return updateImage("portfolio-images/IMG_9144-Edit.jpg")
-          case "product":
-            return updateImage("portfolio-images/IMG_9654-Edit.jpg")
-          default:
-            return updateImage("portfolio-images/IMG_20191027_021157.jpg")
+      const currentIndex = () => {
+        const section =findSection(window.location.hash) 
+        return {
+          section: sectionOrder.findIndex((i) => i.name === section.name),
+          subsection: findSubsection(section, window.location.hash)
         }
+      }
+
+      const selectNav = (section="event") => document.querySelector(`.sidebar__nav a[href='#${section}/1']`).classList.add("sidebar__nav__link--selected")
+      const selectSubnav = (section="event", sub="1") => document.querySelector(`a.link-item__sub-item[href='#${section}/${sub}']`).classList.add("link-item__sub-item--selected")
+
+      function gotoSection({section, subsection=1}){
+        console.log(section, subsection)
+        const name = section.name || section
+        document.querySelectorAll(".sidebar__nav a").forEach(link => link.classList.remove("sidebar__nav__link--selected"))
+        document.querySelectorAll(".sidebar__nav a").forEach(link => link.classList.remove("link-item__sub-item--selected"))
+        selectNav(name)
+        selectSubnav(name, subsection)
+        window.location.hash = `${name}/${subsection||1}`;
+        return updateImage(section.images[(subsection||1)-1]);
       }
 
       function updateImage(loc){
@@ -210,7 +240,7 @@
       }
 
       .sidebar__title__name {
-        font-size: 4em;
+        font-size: 3.75em;
         line-height: 1em;
       }
       .sidebar__title__tag {
@@ -367,7 +397,7 @@
       <aside class="site__sidebar sidebar">
         <div class="sidebar__main">
           <div class="sidebar__title">
-            <div class="sidebar__title__name">E Short<span class="mobile-only">&nbsp;</span></div>
+            <div class="sidebar__title__name">EAShort<span class="mobile-only">&nbsp;</span></div>
             <div class="sidebar__title__tag">photography</div>
             <!--<div class="sidebar__title__contact">
               <a href="/contact">contact</a>
@@ -388,32 +418,26 @@
           </div>
           <nav class="sidebar__nav">
             <div    class="sidebar__nav__link link-item">
-              <a class="link-item__anchor" href="#event">Event</a>
+              <a class="link-item__anchor" href="#headshot/1">Headshot</a>
               <div class="link-item__sub-list">
-                <a href="#" class="link-item__sub-item link-item__sub-item--selected">1</a>
-                <a href="#" class="link-item__sub-item">2</a>
-                <a href="#" class="link-item__sub-item">3</a>
-                <a href="#" class="link-item__sub-item">3</a>
-                <a href="#" class="link-item__sub-item">3</a>
+                <a href="#headshot/1" class="link-item__sub-item">1</a>
+                <a href="#headshot/2" class="link-item__sub-item">2</a>
               </div>
             </div>
             <div    class="sidebar__nav__link link-item">
-              <a class="link-item__anchor" href="#product" >Product</a>
+              <a class="link-item__anchor" href="#product/1" >Product</a>
               <div class="link-item__sub-list">
-                <a href="#" class="link-item__sub-item">1</a>
-                <a href="#" class="link-item__sub-item">2</a>
-                <a href="#" class="link-item__sub-item">3</a>
+                <a href="#product/1" class="link-item__sub-item">1</a>
+                <a href="#product/2" class="link-item__sub-item">2</a>
+              </div>
+            </div>
+            <div    class="sidebar__nav__link link-item">
+              <a class="link-item__anchor" href="#event/1">Event</a>
+              <div class="link-item__sub-list">
+                <a href="#event/1" class="link-item__sub-item">1</a>
               </div>
             </div>
             <!--<a href="#portrait" class="sidebar__nav__link">Portrait</a>-->
-            <div    class="sidebar__nav__link link-item">
-              <a class="link-item__anchor" href="#headshot">Headshot</a>
-              <div class="link-item__sub-list">
-                <a href="#" class="link-item__sub-item">1</a>
-                <a href="#" class="link-item__sub-item">2</a>
-                <a href="#" class="link-item__sub-item">3</a>
-              </div>
-            </div>
           </nav>
         </div>
         <footer class="sidebar__footer desktop-only">
