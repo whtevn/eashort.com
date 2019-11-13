@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-151869522-1"></script>
@@ -11,7 +11,6 @@
       gtag('config', 'UA-151869522-1');
     </script>
 
-    <meta name="google" content="notranslate" />
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <title>EAShort Photography</title>
     <link rel="stylesheet" type="text/css" href="assets/fonts.css" />
@@ -48,13 +47,14 @@
         body.addEventListener('touchstart', function(e) {
           touchstartX = e.touches[0].clientX;
           touchstartY = e.touches[0].clientY;
-        }, false);
+        }, {passive: true});
 
         body.addEventListener('touchend', function(e) {
           touchendX = e.changedTouches[0].clientX;
           touchendY = e.changedTouches[0].clientY;
           handleGesture({ touchstartX, touchstartY, touchendX, touchendY });
-        }, false);
+          touchstartX = touchstartY = touchendX = touchendY = 0;
+        }, {passive: true});
       }
 
       function handleGesture(init){
@@ -418,7 +418,8 @@
         }
       }
     </style>
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="Evan Short's headshot, product, and event photography portfolio. Contact evan@eashort.com for booking and consulting opportunities">
   </head>
   <body>
     <div class="site">
