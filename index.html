@@ -29,6 +29,14 @@
         const section = findSection(window.location.hash);
         gotoSection({section, subsection: findSubsection(section, window.location.hash)})
         addGestures(document.querySelector(".body"));
+        window.addEventListener('popstate', function(event) {
+          const section = findSection(location.hash);
+          const subsection = findSubsection(section, location.hash)
+          const oldImage = document.querySelector(".body__main-image").src
+          if(!oldImage.match(section.images[subsection-1].loc)){
+            gotoSection({section, subsection})
+          }
+        })
       })
 
       function addGestures(body){
@@ -71,7 +79,7 @@
           case 'W':
           case 'ArrowLeft':
           case 'ArrowUp':
-            doGo(goBack(currentIndex()));
+            if(!e.metaKey) doGo(goBack(currentIndex()));
             break;
           case 's':
           case 'S':
@@ -79,7 +87,7 @@
           case 'D':
           case 'ArrowRight':
           case 'ArrowDown':
-            doGo(goForeward(currentIndex()));
+            if(!e.metaKey) doGo(goForeward(currentIndex()));
             break;
           default:
             return
@@ -116,19 +124,19 @@
       const sectionOrder = [
         {name: "headshot",
          images: [
-          "portfolio-images/IMG_9446-Edit.jpg",
-          "portfolio-images/IMG_9144-Edit.jpg",
+             {loc: "portfolio-images/IMG_9446-Edit.jpg"},
+             {loc: "portfolio-images/IMG_9144-Edit.jpg"},
          ],
         },
         {name: "product",
          images: [
-          "portfolio-images/IMG_9654-Edit.jpg",
-          "portfolio-images/IMG_9782-Edit.jpg",
+           {loc: "portfolio-images/IMG_9654-Edit.jpg"},
+           {loc: "portfolio-images/IMG_9782-Edit.jpg"},
          ],
         },
         {name: "event",
          images: [
-          "portfolio-images/IMG_20191027_021157.jpg"
+           {loc: "portfolio-images/IMG_20191027_021157.jpg"}
          ],
         },
       ];
@@ -158,13 +166,23 @@
         selectNav(name)
         selectSubnav(name, subsection)
         window.location.hash = `${name}/${subsection||1}`;
-        return updateImage(section.images[(subsection||1)-1]);
+        return updateImage(section, (subsection||1)-1);
       }
 
-      function updateImage(loc){
-        document
-          .querySelector(".body__main-image")
-          .setAttribute("src", loc)
+      function updateImage(section, index){
+        const imageEntry = section.images[index];
+        const oldImage = document.querySelector(".body__main-image")
+        if(imageEntry.element){
+          oldImage.parentNode
+            .replaceChild(imageEntry.element, oldImage)
+        }else{
+          const newImage = document.createElement('img');
+          newImage.src =  imageEntry.loc;
+          newImage.classList.add("body__main-image");
+          imageEntry.element = newImage;
+          oldImage.parentNode
+            .replaceChild(newImage, oldImage)
+        }
       }
     </script>
 
@@ -203,9 +221,9 @@
 
       .site__body {
         height: 100%;
-        background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        background-image: url("/assets/76.svg");
         display: flex;
         justify-content:center;
       }
