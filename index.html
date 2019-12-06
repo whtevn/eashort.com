@@ -12,7 +12,7 @@
     </script>
 
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <title>EAShort Photography</title>
+    <title>Evan Short Indianapolis Photography and Consulting</title>
     <link rel="stylesheet" type="text/css" href="assets/fonts.css" />
 
     <script>
@@ -27,7 +27,7 @@
         })
         const section = findSection(window.location.hash);
         gotoSection({section, subsection: findSubsection(section, window.location.hash)})
-        addGestures(document.querySelector(".body"));
+        //addGestures(document.querySelector(".body"));
         window.addEventListener('popstate', function(event) {
           const section = findSection(location.hash);
           const subsection = findSubsection(section, location.hash)
@@ -179,6 +179,7 @@
           const newImage = document.createElement('img');
           newImage.src =  imageEntry.loc;
           newImage.classList.add("body__main-image");
+          newImage.setAttribute("alt", `${section.name} #${index+1}`);
           imageEntry.element = newImage;
           oldImage.parentNode
             .replaceChild(newImage, oldImage)
@@ -220,7 +221,7 @@
       }
 
       .site__body {
-        height: 100%;
+        height: 100vh;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url("/assets/76.svg");
@@ -265,14 +266,18 @@
         flex-direction: column;
         align-items: flex-end;
         margin-right: 1.0em;
+        font-size: 1em;
       }
 
       .sidebar__title__name {
         font-size: 3.75em;
         line-height: 1em;
+        margin: 0;
+        font-weight: lighter;
       }
       .sidebar__title__tag {
-        font-size: 2em;
+        font-size: 1.25em;
+        text-align: right;
       }
 
       .sidebar__title__social {
@@ -361,8 +366,21 @@
 
       @media only screen and (max-width: 600px)  {
         .site {
-          grid-template-rows: 6em auto 2em;
+          grid-template-rows: 8em auto 2em;
           grid-template-columns:  auto;
+        }
+        .site__body {
+          height: 70vh;
+          padding-top: 1em;
+        }
+        .link-item {
+          margin-bottom: 0;
+        }
+        .link-item__sub-list {
+          padding-bottom: 0;
+        }
+        a.link-item__sub-item {
+          padding-bottom: 0;
         }
 
         .sidebar {
@@ -387,10 +405,12 @@
         }
 
         .sidebar__title {
+          margin:0;
           margin-right: 0.5em;
           flex-direction: row;
           align-items: center;
           justify-content: flex-end;
+          font-size: 1em;
         }
 
         .sidebar__title__name {
@@ -398,7 +418,7 @@
         }
 
         .sidebar__title__tag {
-          font-size: 2em;
+          font-size: 1em;
         }
         .desktop-only {
           display: none;
@@ -417,17 +437,24 @@
           padding-right: 0.5em;
         }
       }
+      .elevate-text-t {
+        position: relative;
+        top: -0.01em;
+      }
+
     </style>
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="description" content="Evan Short's headshot, product, and event photography portfolio. Contact evan@eashort.com for booking and consulting opportunities">
+    <meta name="description" content="Commercial photography based in Indianapolis, Indiana. Headshot, product, and event photography. Contact evan@eashort.com for booking and consultation">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+    <meta charset="UTF-8">
   </head>
   <body>
     <div class="site">
       <aside class="site__sidebar sidebar">
         <div class="sidebar__main">
-          <div class="sidebar__title">
-            <div class="sidebar__title__name">EAShort<span class="mobile-only">&nbsp;</span></div>
-            <div class="sidebar__title__tag">photography</div>
+          <h1 class="sidebar__title">
+            <div class="sidebar__title__name">EAShor<span class="elevate-text-t">t</span><span class="mobile-only">&nbsp;</span></div>
+            <div class="sidebar__title__tag">Indianapolis Indiana commercial photography</div>
             <!--<div class="sidebar__title__contact">
               <a href="/contact">contact</a>
             </div>-->
@@ -444,7 +471,7 @@
               </a>
             </div>
             -->
-          </div>
+          </h1>
           <nav class="sidebar__nav">
             <div    class="sidebar__nav__link link-item">
               <a class="link-item__anchor" href="#headshot/1">Headshot</a>
